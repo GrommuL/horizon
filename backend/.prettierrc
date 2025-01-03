@@ -1,0 +1,31 @@
+{
+  "jsxSingleQuote": true,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "useTabs": true,
+  "semi": false,
+  "tabWidth": 2,
+  "printWidth": 125,
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderCaseInsensitive": true,
+  "importOrderParserPlugins": ["typescript", "decorators-legacy"],
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "^@/app/(.*)$",
+    "^@/modules/(.*)$",
+    "^@/database/(.*)$",
+    "^@/graphql/(.*)$",
+    "^@/redis/(.*)$",
+    "^@/config/(.*)$",
+    "^@/logger/(.*)$",
+    "^@/logs/(.*)$",
+    "^@/common/(.*)$",
+    "^@/shared/(.*)$",
+    "^@/types/(.*)$",
+    "^@/(.*)$",
+    "^../(.*)",
+    "^./(.*)"
+  ],
+  "plugins": ["@trivago/prettier-plugin-sort-imports"]
+}
