@@ -8,19 +8,104 @@ datasource db {
 }
 
 model User {
-  id String @id @default(cuid())
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  username  String   @unique
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  email    String @unique
-  password String
+  tracks Track[]
 
-  username    String @unique
-  displayName String @map("display_name")
+  Playlist Playlist[]
+  Like     Like[]
+}
 
-  avatar String?
-  bio    String?
+model Track {
+  id        String   @id @default(cuid())
+  title     String
+  artist    String
+  album     Album    @relation(fields: [albumId], references: [id])
+  albumId   String
+  duration  Int
+  filePath  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  @@map("users")
+  playlists PlaylistTrack[]
+  likes     Like[]
+  genres    GenreTrack[]
+
+  @@index([userId])
+  @@index([albumId])
+}
+
+model Album {
+  id        String   @id @default(cuid())
+  title     String
+  artist    String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tracks Track[]
+}
+
+model Playlist {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  tracks PlaylistTrack[]
+
+  @@index([userId])
+}
+
+model PlaylistTrack {
+  id         String   @id @default(cuid())
+  playlistId String
+  trackId    String
+  addedAt    DateTime @default(now())
+
+  playlist Playlist @relation(fields: [playlistId], references: [id])
+  track    Track    @relation(fields: [trackId], references: [id])
+
+  @@unique([playlistId, trackId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  trackId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  track Track @relation(fields: [trackId], references: [id])
+
+  @@unique([userId, trackId])
+}
+
+model Genre {
+  id     String       @id @default(cuid())
+  name   String       @unique
+  tracks GenreTrack[]
+}
+
+model GenreTrack {
+  id      String @id @default(cuid())
+  genreId String
+  trackId String
+
+  genre Genre @relation(fields: [genreId], references: [id])
+  track Track @relation(fields: [trackId], references: [id])
+
+  @@unique([genreId, trackId])
 }
